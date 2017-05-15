@@ -19,6 +19,7 @@ module Apartment
       super
 
       Apartment.connection_handler = ActiveRecord::ConnectionAdapters::ConnectionHandler.new
+      process_excluded_models # because each adapter has a completely different connection handler
       reset
     end
 
