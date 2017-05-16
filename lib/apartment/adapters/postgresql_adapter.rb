@@ -15,6 +15,15 @@ module Apartment
     # Default adapter when not using Postgresql Schemas
     class PostgresqlAdapter < AbstractAdapter
 
+    def initialize(config)
+      super
+
+      Apartment.connection_handler.clear_all_connections! # clear out old connection pools
+      Apartment.connection_handler = ActiveRecord::ConnectionAdapters::ConnectionHandler.new # fresh connection handler
+      process_excluded_models # re-establish connections to excluded models
+      reset # re-establish connection to default tenant
+    end
+
     private
 
       def rescue_from
