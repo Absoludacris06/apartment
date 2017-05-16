@@ -86,6 +86,8 @@ module Apartment
       #
       def switch!(tenant = nil)
         run_callbacks :switch do
+          Apartment.connection_handler.clear_all_connections!
+
           return reset if tenant.nil?
 
           connect_to_new(tenant).tap do

@@ -18,9 +18,10 @@ module Apartment
     def initialize(config)
       super
 
-      Apartment.connection_handler = ActiveRecord::ConnectionAdapters::ConnectionHandler.new
-      process_excluded_models # because each adapter has a completely different connection handler
-      reset
+      Apartment.connection_handler.clear_all_connections! # clear out old connection pools
+      Apartment.connection_handler = ActiveRecord::ConnectionAdapters::ConnectionHandler.new # fresh connection handler
+      process_excluded_models # re-establish connections to excluded models
+      reset # re-establish connection to default tenant
     end
 
     private
